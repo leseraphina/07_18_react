@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect,useCallback} from 'react';
 import ReactDOM from 'react-dom/client';
 
 // compoment
@@ -8,11 +8,26 @@ import AddInfo from './Component/AddInfo';
 
 // source
 import './index.css'
-import appointData from './data.json'
+// import appointData from './data.json'
 import {BiArchive} from 'react-icons/bi'
 import './index.css';
 
 function App(){
+// state
+const [appointList,setAppointList] = useState([])
+// 함수
+
+// useCallback
+const fetchData = useCallback(
+  () => {
+    fetch('./data.json')
+    .then(response => response.json())
+    .then(data => setAppointList(data))
+  },[]
+)
+// useEffect
+useEffect(() => {fetchData()},[fetchData])
+
   return (
     <article>
       <h3>
@@ -24,10 +39,13 @@ function App(){
       <div id="list">
         <ul>
           {
-            appointData.map( (item) => (
+            appointList.map( (appointment) => (
               <AddInfo
-                key={item.id}
-                appointment = {item}
+                key={appointment.id}
+                appointment = {appointment}
+                onDeleteAppoint = {
+                  appointmentId => setAppointList(appointList.filter(appointment => appointment.id !== appointmentId ))
+                }
                 />
             ))
           }
@@ -38,7 +56,7 @@ function App(){
 
   )
 }
-
+// 40
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
