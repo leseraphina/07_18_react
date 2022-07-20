@@ -15,7 +15,18 @@ import './index.css';
 function App(){
 // state
 const [appointList,setAppointList] = useState([])
+// search
+const [query,setQuery] = useState('')
 // 함수
+const filterAppointments = appointList.filter(
+  (item) => {
+    return (
+      item.petName.toLowerCase().includes(query.toLowerCase()) ||
+      item.ownerName.toLowerCase().includes(query.toLowerCase()) ||
+      item.aptNotes.toLowerCase().includes(query.toLowerCase())
+    )
+  }
+)
 
 // useCallback
 const fetchData = useCallback(
@@ -35,11 +46,15 @@ useEffect(() => {fetchData()},[fetchData])
         예약시스템
       </h3>
       <AddAppointment />
-      <Search />
+      <Search 
+        query = {query}
+        onQueryChange = {myQuery => setQuery(myQuery)}
+        />
       <div id="list">
         <ul>
           {
-            appointList.map( (appointment) => (
+          // appointList.map( (appointment) => (
+            filterAppointments.map( (appointment) => (
               <AddInfo
                 key={appointment.id}
                 appointment = {appointment}

@@ -15,13 +15,19 @@ function DropDown({toggleSort}){
     )
 }
 
-function Search(){
+function Search({query,onQueryChange}){
 const [toggleSort, setToggleSort] = useState(false)
     return (
         <div id="search">
             <p>
                 <BiSearch />
-                <input type="text" placeholder="search" />
+                <input 
+                    type="text" 
+                    placeholder="search"
+                    value={query}
+                    onChange={
+                        (event) => {onQueryChange(event.target.value)}
+                    } />
                 <button 
                     type="button"
                     onClick = {() => {
