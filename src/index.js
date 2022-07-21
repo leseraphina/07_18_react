@@ -17,6 +17,8 @@ function App(){
 const [appointList,setAppointList] = useState([])
 // search
 const [query,setQuery] = useState('')
+const [sortBy,setSortBy] = useState('petName')
+const [orderBy, setOrderBy] =useState('asc')
 // 함수
 const filterAppointments = appointList.filter(
   (item) => {
@@ -24,6 +26,13 @@ const filterAppointments = appointList.filter(
       item.petName.toLowerCase().includes(query.toLowerCase()) ||
       item.ownerName.toLowerCase().includes(query.toLowerCase()) ||
       item.aptNotes.toLowerCase().includes(query.toLowerCase())
+    )
+  }
+).sort(
+  (a,b) => {
+    let order = (orderBy === 'asc' ? 1 : -1)
+    return (
+      a[sortBy].toLowerCase() > b[sortBy].toLowerCase ? -1 * order  : 1 * order
     )
   }
 )
@@ -45,10 +54,21 @@ useEffect(() => {fetchData()},[fetchData])
         <BiArchive />
         예약시스템
       </h3>
-      <AddAppointment />
+      <AddAppointment
+        onSendAppointment={
+          myAppointment => setAppointList([...appointList,myAppointment])
+        } 
+        lastId ={
+          appointList.reduce((max,item) => Number(item.id) > max ? Number(item.id) : max ,0)
+        }
+        />
       <Search 
         query = {query}
         onQueryChange = {myQuery => setQuery(myQuery)}
+        orderBy = {orderBy}
+        onOrderByChange = {myOrder => setOrderBy(myOrder)}
+        sortBy = {sortBy}
+        onSortByChagne = {mySort => setSortBy(mySort)}
         />
       <div id="list">
         <ul>
